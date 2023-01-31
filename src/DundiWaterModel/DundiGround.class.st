@@ -3,7 +3,8 @@ Class {
 	#superclass : #CMSpatialEntityElement,
 	#instVars : [
 		'grassAmount',
-		'waterAmount'
+		'waterAmount',
+		'isGrassFresh'
 	],
 	#category : #DundiWaterModel
 }
@@ -12,6 +13,30 @@ Class {
 DundiGround class >> diffusionRate [
 
 	^ 0.1
+]
+
+{ #category : #accessing }
+DundiGround class >> entityName [
+
+	^ 'Ground'
+]
+
+{ #category : #'as yet unclassified' }
+DundiGround class >> spawnNewGrassProbability [
+
+	^ 0.3
+]
+
+{ #category : #'as yet unclassified' }
+DundiGround class >> waterConsumptionRate [
+
+	^ Random new next / 10
+]
+
+{ #category : #'as yet unclassified' }
+DundiGround >> consumeWater [
+	"Grass consumes water"
+	waterAmount := waterAmount - (grassAmount * self class waterConsumptionRate).
 ]
 
 { #category : #'as yet unclassified' }
@@ -32,6 +57,18 @@ DundiGround >> diffuse: aSymbol [
 		
 	self perform: setter with: (value * (1 - self class diffusionRate))
 
+]
+
+{ #category : #'as yet unclassified' }
+DundiGround >> diffuseWater [
+
+	self diffuse: #waterAmount
+]
+
+{ #category : #'as yet unclassified' }
+DundiGround >> dryGrass [
+
+	isGrassFresh := false.
 ]
 
 { #category : #accessing }
@@ -57,19 +94,38 @@ DundiGround >> grassAmount_default [
 { #category : #'as yet unclassified' }
 DundiGround >> growGrass [
 
-	self grassAmount: (Cormas logisticGrowth: self grassAmount r: 0.01 K: 10).
+	self grassAmount: (Cormas logisticGrowth: self grassAmount r: 0.02 K: 10).
+]
+
+{ #category : #testing }
+DundiGround >> hasEnoughWater [
+
+	^ waterAmount >= self class waterConsumptionRate 
+]
+
+{ #category : #testing }
+DundiGround >> hasGrass [
+
+	^ grassAmount > 0
+]
+
+{ #category : #initialization }
+DundiGround >> initialize [
+	
+	super initialize.
+	isGrassFresh := true.
 ]
 
 { #category : #initialization }
 DundiGround >> initializeRandomGrass [
 
-	^ self grassAmount: (Random new nextIntegerBetween: 0 and: 10)
+	self grassAmount: (Random new nextIntegerBetween: 0 and: 10)
 ]
 
 { #category : #initialization }
 DundiGround >> initializeRandomWater [
 
-	^ self waterAmount: (Random new nextIntegerBetween: 0 and: 10)
+	self waterAmount: (Random new nextIntegerBetween: 0 and: 10)
 ]
 
 { #category : #testing }
@@ -84,7 +140,7 @@ DundiGround >> povGrass [
 		povAttribute: #grassAmount
 		min: 0
 		max: 10
-		color: Color green
+		color: (isGrassFresh ifTrue: [ Color green ] ifFalse: [ Color yellow ]).
 ]
 
 { #category : #pov }
@@ -97,10 +153,25 @@ DundiGround >> povWater [
 		color: Color blue
 ]
 
+{ #category : #'as yet unclassified' }
+DundiGround >> spawnNewGrass [
+
+	self initializeRandomGrass
+]
+
 { #category : #stepping }
 DundiGround >> step [
-
-	self growGrass
+	
+	self hasGrass ifFalse: [ 
+		self hasEnoughWater ifTrue: [ 
+			Random new next < self class spawnNewGrassProbability ifTrue: [ self spawnNewGrass ] ].
+		^ self ].
+	
+	isGrassFresh ifFalse: [ ^ self ].
+	
+	self hasEnoughWater ifFalse: [ self dryGrass ].
+	self consumeWater.
+	self growGrass.
 ]
 
 { #category : #accessing }

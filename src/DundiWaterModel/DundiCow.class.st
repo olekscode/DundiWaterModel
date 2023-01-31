@@ -4,9 +4,6 @@ Class {
 	#instVars : [
 		'energy'
 	],
-	#classVars : [
-		'catabolicRate'
-	],
 	#classInstVars : [
 		'harvestRate'
 	],
@@ -35,6 +32,12 @@ DundiCow class >> catabolicRate_default [
 DundiCow class >> energy_default [
 
 	^ 50
+]
+
+{ #category : #accessing }
+DundiCow class >> entityName [
+	
+	^ 'Cow'
 ]
 
 { #category : #accessing }

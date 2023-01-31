@@ -15,10 +15,22 @@ DundiModel class >> initialGrassDensity [
 	^ 0.1
 ]
 
+{ #category : #accessing }
+DundiModel class >> maxRainAmount [
+
+	^ 2
+]
+
 { #category : #'as yet unclassified' }
 DundiModel class >> numberOfCows [
 
-	^ 100
+	^ 30
+]
+
+{ #category : #'as yet unclassified' }
+DundiModel class >> rainProbability [
+
+	^ 0.05
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,19 +81,27 @@ DundiModel >> initAgents [
 	self
 		createN: self class numberOfCows
 		randomlyLocatedAloneEntities: DundiCow.
-		
-	self
-		createN: (self spaceModel gridSize * self class initialGrassDensity) asInteger
-		randomlyLocatedAloneEntities: DundiGrass.
+]
+
+{ #category : #'as yet unclassified' }
+DundiModel >> makeItRain [
+
+	| rainAmount |
+	rainAmount := Random new nextBetween: 0 and: self class maxRainAmount.
+
+	theGrounds do: [ :ground |
+		ground waterAmount: (ground waterAmount + rainAmount) ].
 ]
 
 { #category : #control }
 DundiModel >> step: arg1 [
 
+	Random new next < self class rainProbability ifTrue: [ 
+		self makeItRain ].
+
 	self
 		stepEntities: self theGrounds;
-		askRandom: DundiCow toDo: #step;
-		askRandom: DundiGrass toDo: #step.
+		askRandom: DundiCow toDo: #step.
 ]
 
 { #category : #accessing }
