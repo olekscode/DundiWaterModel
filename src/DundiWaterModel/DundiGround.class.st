@@ -24,7 +24,7 @@ DundiGround class >> entityName [
 { #category : #'as yet unclassified' }
 DundiGround class >> spawnNewGrassProbability [
 
-	^ 0.3
+	^ 0.5
 ]
 
 { #category : #'as yet unclassified' }
@@ -56,6 +56,21 @@ DundiGround >> diffuse: aSymbol [
 			with: neighbourValue ].
 		
 	self perform: setter with: (value * (1 - self class diffusionRate))
+
+]
+
+{ #category : #'as yet unclassified' }
+DundiGround >> diffuseFreshGrass [
+	
+	self hasGrass ifFalse: [ ^ self ].
+	self isGrassFresh ifFalse: [ ^ self ].
+
+	self neighbourhood do: [ :neighbour |
+		neighbour isGrassFresh ifTrue: [
+			neighbour grassAmount:
+				(neighbour grassAmount + (self grassAmount * self class diffusionRate / 8)) ] ].
+		
+	self grassAmount: (self grassAmount * (1 - self class diffusionRate))
 
 ]
 
@@ -106,20 +121,14 @@ DundiGround >> hasEnoughWater [
 { #category : #testing }
 DundiGround >> hasGrass [
 
-	^ grassAmount > 0
-]
-
-{ #category : #initialization }
-DundiGround >> initialize [
-	
-	super initialize.
-	isGrassFresh := true.
+	^ grassAmount > 0.1
 ]
 
 { #category : #initialization }
 DundiGround >> initializeRandomGrass [
 
-	self grassAmount: (Random new nextIntegerBetween: 0 and: 10)
+	self grassAmount: (Random new nextIntegerBetween: 0 and: 10).
+	isGrassFresh := true.
 ]
 
 { #category : #initialization }
@@ -131,6 +140,12 @@ DundiGround >> initializeRandomWater [
 { #category : #testing }
 DundiGround >> isAbstract [ 
 	^ false
+]
+
+{ #category : #accessing }
+DundiGround >> isGrassFresh [
+
+	^ isGrassFresh 
 ]
 
 { #category : #pov }
@@ -161,6 +176,9 @@ DundiGround >> spawnNewGrass [
 
 { #category : #stepping }
 DundiGround >> step [
+	
+	self diffuseWater.
+	self diffuseFreshGrass.
 	
 	self hasGrass ifFalse: [ 
 		self hasEnoughWater ifTrue: [ 
