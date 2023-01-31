@@ -111,8 +111,8 @@ DundiModel >> step: arg1 [
 		self makeItRain ].
 
 	self
-		stepEntities: self theGrounds;
 		stepEntities: self theTrees;
+		stepEntities: self theGrounds;
 		askRandom: DundiCow toDo: #step.
 ]
 

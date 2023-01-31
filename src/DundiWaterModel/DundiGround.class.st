@@ -24,7 +24,7 @@ DundiGround class >> entityName [
 { #category : #'as yet unclassified' }
 DundiGround class >> spawnNewGrassProbability [
 
-	^ 0.2
+	^ 0.1
 ]
 
 { #category : #'as yet unclassified' }
@@ -177,7 +177,7 @@ DundiGround >> spawnNewGrass [
 { #category : #stepping }
 DundiGround >> step [
 	
-	self diffuseWater.
+	5 timesRepeat: [ self diffuseWater ].
 	self diffuseFreshGrass.
 	
 	self hasGrass ifFalse: [ 

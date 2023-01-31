@@ -13,7 +13,7 @@ DundiTree class >> entityName [
 { #category : #'as yet unclassified' }
 DundiTree class >> waterConsumptionRate [
 
-	^ 3
+	^ 7
 ]
 
 { #category : #'as yet unclassified' }
@@ -22,8 +22,8 @@ DundiTree >> consumeWater [
 	patch ifNil: [ ^ nil ].
 	self patch waterAmount: (self patch waterAmount - self class waterConsumptionRate).
 	
-	self patch diffuseWater.
-	self patch neighbourhood do: [ :neighbour | neighbour diffuseWater ].
+	"self patch diffuseWater.
+	self patch neighbourhood do: [ :neighbour | neighbour diffuseWater ]."
 ]
 
 { #category : #pov }

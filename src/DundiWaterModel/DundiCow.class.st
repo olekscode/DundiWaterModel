@@ -16,7 +16,7 @@ Class {
 { #category : #accessing }
 DundiCow class >> catabolicRate [
 
-	^ 2
+	^ 1
 
 ]
 
@@ -53,11 +53,19 @@ DundiCow >> die [
 { #category : #biology }
 DundiCow >> eat [
 
+	self eatGrassFrom: self patch.
+	
+	"self patch neighbourhood do: [ :neighbour |
+		self eatGrassFrom: neighbour ]."
+]
+
+{ #category : #biology }
+DundiCow >> eatGrassFrom: aGround [
+
 	| consumedGrassAmount |
-	patch ifNil: [ ^ nil ].
-	consumedGrassAmount := self patch grassAmount * self class harvestRate.
+	consumedGrassAmount := aGround grassAmount * self class harvestRate.
 	self energy: self energy + consumedGrassAmount.
-	self patch grassAmount: self patch grassAmount - consumedGrassAmount
+	aGround grassAmount: aGround grassAmount - consumedGrassAmount
 ]
 
 { #category : #accessing }
