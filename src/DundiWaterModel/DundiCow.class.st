@@ -16,19 +16,8 @@ Class {
 { #category : #accessing }
 DundiCow class >> catabolicRate [
 
-	^ catabolicRate ifNil: [ catabolicRate := self catabolicRate_default ]
-]
+	^ 2
 
-{ #category : #accessing }
-DundiCow class >> catabolicRate: aNumber [
-
-	catabolicRate := aNumber
-]
-
-{ #category : #accessing }
-DundiCow class >> catabolicRate_default [
-
-	^ 0
 ]
 
 { #category : #'default value' }
@@ -46,25 +35,13 @@ DundiCow class >> entityName [
 { #category : #accessing }
 DundiCow class >> harvestRate [
 
-	^ harvestRate ifNil: [ harvestRate := self harvestRate_default ]
-]
-
-{ #category : #accessing }
-DundiCow class >> harvestRate: aNumber [
-
-	harvestRate := aNumber
-]
-
-{ #category : #accessing }
-DundiCow class >> harvestRate_default [
-
-	^ 0.9
+	^ 0.99
 ]
 
 { #category : #'as yet unclassified' }
 DundiCow >> burnEnergy [
 
-	self energy: self energy - self class catabolicRate
+	self energy: (self energy - self class catabolicRate)
 ]
 
 { #category : #biology }

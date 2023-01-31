@@ -19,13 +19,13 @@ DundiModel class >> initialGrassDensity [
 { #category : #accessing }
 DundiModel class >> maxRainAmount [
 
-	^ 2
+	^ 1
 ]
 
 { #category : #'as yet unclassified' }
 DundiModel class >> numberOfCows [
 
-	^ 100
+	^ 50
 ]
 
 { #category : #'as yet unclassified' }
@@ -37,7 +37,7 @@ DundiModel class >> numberOfTrees [
 { #category : #'as yet unclassified' }
 DundiModel class >> rainProbability [
 
-	^ 0.05
+	^ 0.02
 ]
 
 { #category : #'as yet unclassified' }

@@ -29,13 +29,13 @@ DundiTree >> consumeWater [
 { #category : #pov }
 DundiTree >> pov [
 
-	^ Color brown
+	^ Color pink
 ]
 
 { #category : #accessing }
 DundiTree >> sizeOfPOV [
 
-	^ 30
+	^ 35
 ]
 
 { #category : #stepping }
